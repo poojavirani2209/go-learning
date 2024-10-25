@@ -1,11 +1,24 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func main() {
-	revenue := getInput("Tell me your revenue")
-	expenses := getInput("Tell me your expenses")
-	tax := getInput("Tell me your tax rate")
+	revenue, error := getInput("Tell me your revenue")
+	if error != nil {
+		fmt.Print(error)
+	}
+	expenses, error := getInput("Tell me your expenses")
+	if error != nil {
+		fmt.Print(error)
+	}
+
+	tax, error := getInput("Tell me your tax rate")
+	if error != nil {
+		fmt.Print(error)
+	}
 
 	earnBeforeTax, profit := calculateProfit(revenue, expenses, tax)
 
@@ -25,9 +38,13 @@ func calculateProfit(revenue float64, expenses float64, tax float64) (float64, f
 	return earnBeforeTax, profit
 }
 
-func getInput(inputExpected string) float64 {
+func getInput(inputExpected string) (float64, error) {
 	var inputValueProvided float64
 	fmt.Println(inputExpected)
 	fmt.Scan(&inputValueProvided)
-	return inputValueProvided
+	if inputValueProvided <= 0 {
+		return 0, errors.New("Invalid input provided")
+
+	}
+	return inputValueProvided, nil
 }
